@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Xml;
-using System.Xml.Serialization;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -10,43 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using org.apache.pdfbox.pdmodel;
-using org.apache.pdfbox.util;
+using System.IO;
 
 namespace StudInfo
 {
-    public struct Student
-    {
-        public string Surname;
-        public string FName;
-        public string SName;
-        public string Rate;
-        public string Group;
-        public string Addition;
-
-        public Student(string surname, string fname, string sname, string rate, string group, string addition)
-        {
-            FName = fname;
-            Surname = surname;
-            SName = sname;
-            Rate = rate;
-            Group = group;
-            Addition = addition;
-        }
-
-
-        public override string ToString()
-        {
-            return Surname + " " + FName + " " + SName + " " + Rate + " " + Group + " " + Addition;
-        }
-    }
-
     public partial class StudInfoForm : Form
     {
-        //string path = "test.pdf";
-        List<Student> StudRates = new List<Student>();
-        public StudInfoForm()
+        private readonly IRatingService Rating;
+
+        public StudInfoForm(IRatingService ratingService)
         {
+            Rating = ratingService;
             InitializeComponent();
         }
 
@@ -56,22 +27,19 @@ namespace StudInfo
             {
                 Multiselect = true
             };
-            DialogResult dialogResult  = ofd.ShowDialog();
-            if(dialogResult== DialogResult.Cancel || dialogResult== DialogResult.Abort || dialogResult== DialogResult.No)
+            DialogResult dialogResult = ofd.ShowDialog();
+            if (dialogResult == DialogResult.Cancel || dialogResult == DialogResult.Abort || dialogResult == DialogResult.No)
             {
                 return;
             }
+            Rating.FillFromPDF(ofd.FileNames);
 
-            foreach(string path in ofd.FileNames)
-            {
-                StudRates.AddRange(ReadFromPDF(path));
-            }
-            FillStudRatesGrid();            
+            FillStudRatesGrid(Rating.Students);
         }
 
-        private void FillStudRatesGrid()
+        private void FillStudRatesGrid(IReadOnlyList<Student> students)
         {
-            foreach (Student stud in StudRates)
+            foreach (Student stud in students)
             {
                 DataGridViewTextBoxCell cellSurname = new DataGridViewTextBoxCell();
                 cellSurname.Value = stud.Surname;
@@ -98,102 +66,10 @@ namespace StudInfo
             }
         }
 
-        private IEnumerable<Student> ReadFromPDF(string path)
-        {
-            List<Student> students = new List<Student>();
-            string text = "";
-
-            PDDocument document = PDDocument.load(path);
-            PDFTextStripper stripper = new PDFTextStripper();
-            text = stripper.getText(document);
-
-            List<string> contentFirst = new List<string>();
-            string[] separated = text.Split(null);
-            foreach (string str in separated)
-            {
-                if (str != "")
-                {
-                    contentFirst.Add(str);
-                }
-            }
-            int indexPIB = contentFirst.IndexOf("П.І.Б");
-            contentFirst.RemoveRange(0, indexPIB);
-            for (int i = 5; i < contentFirst.Count; i++)
-            {
-                if (Char.IsLower(contentFirst[i][0]))
-                {
-                    i++;
-                    continue;
-                }
-                Student stud = new Student();
-                stud.Surname = contentFirst[i];
-                i++;
-                stud.FName = contentFirst[i];
-                i++;
-                stud.SName = contentFirst[i];
-                i++;
-                // если имен четыре
-                if (Char.IsUpper(contentFirst[i][0]) || contentFirst[i]=="-") // костыль для обработки коряво записаного Буй Ван Тунга -
-                {
-                    stud.SName += " " + contentFirst[i];
-                    i++;
-                }
-
-                if (contentFirst[i] == "не")
-                {
-                    if (Char.IsUpper(contentFirst[i + 1][0])) // ячейка разделена разрывом страницы
-                    {
-                        stud.Rate = contentFirst[i] + " " + contentFirst[i+3];
-                        contentFirst.RemoveAt(i + 3);
-                    }
-                    else
-                    {
-                        stud.Rate = contentFirst[i] + " " + contentFirst[++i];
-                    }
-                    i++;
-                }
-                else
-                {
-                    stud.Rate = contentFirst[i];
-                    i++;
-                }
-                stud.Group = contentFirst[i];
-                i++;
-                while (Char.IsLower(contentFirst[i][0]))
-                {
-                    stud.Addition += contentFirst[i] + " ";
-                    i++;
-                    if (i == contentFirst.Count)
-                    {
-                        break;
-                    }
-                }
-                if (stud.Addition != null)
-                    stud.Addition.Trim();
-                i--;
-                students.Add(stud);
-            }
-            return students;
-        }
-
-        private void buttonGetFIOGroup_Click(object sender, EventArgs e)
-        {
-            string selected = "";
-            if (dataGridViewStudRates.SelectedRows != null)
-            {
-                selected = dataGridViewStudRates.SelectedRows[0].Cells[0].Value.ToString()
-                    + " " + dataGridViewStudRates.SelectedRows[0].Cells[1].Value.ToString()[0]
-                    + "." + dataGridViewStudRates.SelectedRows[0].Cells[2].Value.ToString()[0]
-                    + ". ("+ dataGridViewStudRates.SelectedRows[0].Cells[4].Value.ToString() + ")";
-                //MessageBox.Show(selected);
-                Clipboard.SetData(DataFormats.Text, (Object)selected);
-            }
-        }
-
         private void StudRatingForm_Load(object sender, EventArgs e)
         {
             string[] xmlFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.xml");
-            for(int i=0;i< xmlFiles.Length;i++)
+            for (int i = 0; i < xmlFiles.Length; i++)
             {
                 xmlFiles[i] = Path.GetFileName(xmlFiles[i]);
             }
@@ -203,17 +79,8 @@ namespace StudInfo
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             dataGridViewStudRates.Rows.Clear();
-            ReadFromXML(listBox1.SelectedItem.ToString());
-            FillStudRatesGrid();
-        }
-
-        private void ReadFromXML(string path)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(List<Student>));
-            FileStream fs = new FileStream(path, FileMode.Open);
-            XmlReader reader = XmlReader.Create(fs);
-            StudRates = (List<Student>)serializer.Deserialize(reader);
-            fs.Close();
+            Rating.FillFromXML(listBox1.SelectedItem.ToString());
+            FillStudRatesGrid(Rating.Students);
         }
 
         private void buttonSaveToXML_Click(object sender, EventArgs e)
@@ -224,49 +91,71 @@ namespace StudInfo
             {
                 return;
             }
-
-            SerializeObject(sfd.FileName);
-        }
-
-        private void SerializeObject(string filename)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(List<Student>));
-            Stream fs = new FileStream(filename, FileMode.Create);
-            XmlWriter writer = new XmlTextWriter(fs, Encoding.Unicode);
-            serializer.Serialize(writer, StudRates);
-            writer.Close();
+            Rating.SaveToXML(sfd.FileName);
         }
 
         private void buttonDataGridClear_Click(object sender, EventArgs e)
         {
-            StudRates.Clear();
+            Rating.Clear();
             dataGridViewStudRates.Rows.Clear();
         }
 
         private void buttonGetGroup_Click(object sender, EventArgs e)
         {
-            string selected = "";
-            if (dataGridViewStudRates.SelectedRows != null)
+            if (dataGridViewStudRates.SelectedRows == null)
             {
-                selected = " (" + dataGridViewStudRates.SelectedRows[0].Cells[4].Value.ToString() + ")";
-                //MessageBox.Show(selected);
-                Clipboard.SetData(DataFormats.Text, (Object)selected);
+                return;
             }
+
+            ClipboardGroup(dataGridViewStudRates.SelectedRows[0]);
+        }
+
+        private void ClipboardGroup(DataGridViewRow selectedRow)
+        {
+            string group = selectedRow.Cells[4].Value.ToString();
+            string studInfo = " (" + group + ")";
+
+            textBoxClipboardContent.Text = studInfo;
+            Clipboard.SetData(DataFormats.Text, studInfo);
+        }
+
+        private void buttonGetFIOGroup_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewStudRates.SelectedRows == null)
+            {
+                return;
+            }
+
+            ClipboardFIOGroup(dataGridViewStudRates.SelectedRows[0]);
+        }
+
+        private void ClipboardFIOGroup(DataGridViewRow selectedRow)
+        {
+            string surname = selectedRow.Cells[0].Value.ToString();
+            char name = selectedRow.Cells[1].Value.ToString()[0];
+            char sname = selectedRow.Cells[2].Value.ToString()[0];
+            string group = selectedRow.Cells[4].Value.ToString();
+
+            string studInfo = surname + " " + name + "." + sname + ". (" + group + ")";
+
+            textBoxClipboardContent.Text = studInfo;
+            Clipboard.SetData(DataFormats.Text, studInfo);
         }
 
         private void textBoxFilter_TextChanged(object sender, EventArgs e)
         {
-            for (int u = 0; u < dataGridViewStudRates.RowCount; u++)
+            string searchString = textBoxFilter.Text.Trim().ToLower();
+            for (int i = 0; i < dataGridViewStudRates.RowCount; i++)
             {
-                if (dataGridViewStudRates.Rows[u].Cells[0].Value.ToString().StartsWith(textBoxFilter.Text))
-                {
-                    dataGridViewStudRates.Rows[u].Visible = true;
-                }
-                else
-                {
-                    dataGridViewStudRates.Rows[u].Visible = false;
-                }
+                var row = dataGridViewStudRates.Rows[i];
+                string searchSurname = row.Cells[0].Value.ToString().ToLower();
+                row.Visible = searchSurname.StartsWith(searchString);
             }
+        }
+
+        private void StudInfoForm_Activated(object sender, EventArgs e)
+        {
+            textBoxClipboardContent.Text = "";
         }
     }
 }

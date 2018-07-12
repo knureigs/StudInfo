@@ -3,3 +3,5 @@ The program for aggregating information about students, obtained from downloadab
 The information retrieved from the files (name, rating, group, notes) is placed in the list, which can then be serialized into an XML file for reuse.
 After opening the selected XML-file, the table is populated, the output to which can be filtered as the surname is entered.
 The program allows you to create string blanks with the data of the selected student (Surname I.O. (Group), only (Group), etc.) for various extremely important reports.
+
+StudInfo is published under the Apache License v2.0.

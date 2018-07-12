@@ -42,6 +42,8 @@
             this.buttonDataGridClear = new System.Windows.Forms.Button();
             this.buttonGetGroup = new System.Windows.Forms.Button();
             this.textBoxFilter = new System.Windows.Forms.TextBox();
+            this.labelClipboardContent = new System.Windows.Forms.Label();
+            this.textBoxClipboardContent = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewStudRates)).BeginInit();
             this.SuspendLayout();
             // 
@@ -182,11 +184,30 @@
             this.textBoxFilter.TabIndex = 6;
             this.textBoxFilter.TextChanged += new System.EventHandler(this.textBoxFilter_TextChanged);
             // 
-            // StudRatingForm
+            // labelClipboardContent
+            // 
+            this.labelClipboardContent.AutoSize = true;
+            this.labelClipboardContent.Location = new System.Drawing.Point(484, 17);
+            this.labelClipboardContent.Name = "labelClipboardContent";
+            this.labelClipboardContent.Size = new System.Drawing.Size(110, 13);
+            this.labelClipboardContent.TabIndex = 7;
+            this.labelClipboardContent.Text = "labelClipboardContent";
+            // 
+            // textBoxClipboardContent
+            // 
+            this.textBoxClipboardContent.Enabled = false;
+            this.textBoxClipboardContent.Location = new System.Drawing.Point(487, 34);
+            this.textBoxClipboardContent.Name = "textBoxClipboardContent";
+            this.textBoxClipboardContent.Size = new System.Drawing.Size(141, 20);
+            this.textBoxClipboardContent.TabIndex = 8;
+            // 
+            // StudInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(733, 303);
+            this.Controls.Add(this.textBoxClipboardContent);
+            this.Controls.Add(this.labelClipboardContent);
             this.Controls.Add(this.textBoxFilter);
             this.Controls.Add(this.buttonDataGridClear);
             this.Controls.Add(this.buttonSaveToXML);
@@ -195,8 +216,9 @@
             this.Controls.Add(this.dataGridViewStudRates);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.buttonLoadFromFiles);
-            this.Name = "StudRatingForm";
+            this.Name = "StudInfoForm";
             this.Text = "Form1";
+            this.Activated += new System.EventHandler(this.StudInfoForm_Activated);
             this.Load += new System.EventHandler(this.StudRatingForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewStudRates)).EndInit();
             this.ResumeLayout(false);
@@ -220,6 +242,8 @@
         private System.Windows.Forms.Button buttonDataGridClear;
         private System.Windows.Forms.Button buttonGetGroup;
         private System.Windows.Forms.TextBox textBoxFilter;
+        private System.Windows.Forms.Label labelClipboardContent;
+        private System.Windows.Forms.TextBox textBoxClipboardContent;
     }
 }
 

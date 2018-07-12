@@ -16,7 +16,8 @@ namespace StudInfo
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new StudInfoForm());
+            RatingService ratingService = new RatingService();
+            Application.Run(new StudInfoForm(ratingService));
         }
     }
 }
