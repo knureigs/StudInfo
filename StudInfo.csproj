@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="IRatingService.cs" />
     <Compile Include="RatingService.cs" />
+    <Compile Include="Student.cs" />
     <Compile Include="StudInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
