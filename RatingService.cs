@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using org.apache.pdfbox.pdmodel;
-using org.apache.pdfbox.util;
 using System.IO;
+using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using org.apache.pdfbox.pdmodel;
+using org.apache.pdfbox.util;
 
 namespace StudInfo
 {
-    class RatingService: IRatingService
+    /// <summary>
+    /// Предоставляет доступ к данным из стипендиального рейтинга и методам для их получения и сохранения.
+    /// </summary>
+    class RatingService : IRatingService
     {
+        /// <summary>
+        /// Список объектов, описывающих студентов по имеющимся в рейтинге данным.
+        /// </summary>
         private List<Student> students;
         public IReadOnlyList<Student> Students
         {
@@ -23,15 +26,15 @@ namespace StudInfo
             }
         }
 
-        public void FillFromPDF(string[] paths)
+        public void FillFromPdf(string[] paths)
         {
             foreach (string path in paths)
             {
-                students.AddRange(ReadFromPDF(path));
+                students.AddRange(ReadFromPdf(path));
             }
         }
 
-        public void FillFromXML(string path)
+        public void FillFromXml(string path)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(List<Student>));
             FileStream fs = new FileStream(path, FileMode.Open);
@@ -40,7 +43,7 @@ namespace StudInfo
             fs.Close();
         }
 
-        public void SaveToXML(string path)
+        public void SaveToXml(string path)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(List<Student>));
             Stream fs = new FileStream(path, FileMode.Create);
@@ -54,7 +57,12 @@ namespace StudInfo
             students.Clear();
         }
 
-        private IEnumerable<Student> ReadFromPDF(string path)
+        /// <summary>
+        /// Заполняет коллекцию данных о студентах на основании PDF-файла с данными стипендиального рейтинга.
+        /// </summary>
+        /// <param name="path">Путь к PDF-файлу с данными стипендиального рейтинга.</param>
+        /// <returns>Коллекция данных о студентах.</returns>
+        private IEnumerable<Student> ReadFromPdf(string path)
         {
             List<Student> students = new List<Student>();
             string text = "";
@@ -130,31 +138,6 @@ namespace StudInfo
                 students.Add(stud);
             }
             return students;
-        }
-    }
-
-    public struct Student
-    {
-        public string Surname;
-        public string FName;
-        public string SName;
-        public string Rate;
-        public string Group;
-        public string Addition;
-
-        public Student(string surname, string fname, string sname, string rate, string group, string addition)
-        {
-            FName = fname;
-            Surname = surname;
-            SName = sname;
-            Rate = rate;
-            Group = group;
-            Addition = addition;
-        }
-
-        public override string ToString()
-        {
-            return Surname + " " + FName + " " + SName + " " + Rate + " " + Group + " " + Addition;
         }
     }
 }

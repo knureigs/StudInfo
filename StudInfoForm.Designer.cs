@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.buttonLoadFromFiles = new System.Windows.Forms.Button();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.listBoxXmlFiles = new System.Windows.Forms.ListBox();
             this.dataGridViewStudRates = new System.Windows.Forms.DataGridView();
             this.ColumnSurname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnFName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -57,14 +57,14 @@
             this.buttonLoadFromFiles.UseVisualStyleBackColor = true;
             this.buttonLoadFromFiles.Click += new System.EventHandler(this.buttonLoadFromFiles_Click);
             // 
-            // listBox1
+            // listBoxXmlFiles
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(12, 75);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(55, 212);
-            this.listBox1.TabIndex = 1;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            this.listBoxXmlFiles.FormattingEnabled = true;
+            this.listBoxXmlFiles.Location = new System.Drawing.Point(12, 75);
+            this.listBoxXmlFiles.Name = "listBoxXmlFiles";
+            this.listBoxXmlFiles.Size = new System.Drawing.Size(55, 212);
+            this.listBoxXmlFiles.TabIndex = 1;
+            this.listBoxXmlFiles.SelectedIndexChanged += new System.EventHandler(this.listBoxXmlFiles_SelectedIndexChanged);
             // 
             // dataGridViewStudRates
             // 
@@ -93,6 +93,7 @@
             this.dataGridViewStudRates.ShowRowErrors = false;
             this.dataGridViewStudRates.Size = new System.Drawing.Size(648, 215);
             this.dataGridViewStudRates.TabIndex = 2;
+            this.dataGridViewStudRates.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewStudRates_CellContentDoubleClick);
             // 
             // ColumnSurname
             // 
@@ -154,7 +155,7 @@
             this.buttonSaveToXML.TabIndex = 4;
             this.buttonSaveToXML.Text = "SaveToXML";
             this.buttonSaveToXML.UseVisualStyleBackColor = true;
-            this.buttonSaveToXML.Click += new System.EventHandler(this.buttonSaveToXML_Click);
+            this.buttonSaveToXML.Click += new System.EventHandler(this.buttonSaveToXml_Click);
             // 
             // buttonDataGridClear
             // 
@@ -189,9 +190,9 @@
             this.labelClipboardContent.AutoSize = true;
             this.labelClipboardContent.Location = new System.Drawing.Point(484, 17);
             this.labelClipboardContent.Name = "labelClipboardContent";
-            this.labelClipboardContent.Size = new System.Drawing.Size(110, 13);
+            this.labelClipboardContent.Size = new System.Drawing.Size(83, 13);
             this.labelClipboardContent.TabIndex = 7;
-            this.labelClipboardContent.Text = "labelClipboardContent";
+            this.labelClipboardContent.Text = "Буфер обмена:";
             // 
             // textBoxClipboardContent
             // 
@@ -214,7 +215,7 @@
             this.Controls.Add(this.buttonGetGroup);
             this.Controls.Add(this.buttonGetFIOGroup);
             this.Controls.Add(this.dataGridViewStudRates);
-            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.listBoxXmlFiles);
             this.Controls.Add(this.buttonLoadFromFiles);
             this.Name = "StudInfoForm";
             this.Text = "Form1";
@@ -229,7 +230,7 @@
         #endregion
 
         private System.Windows.Forms.Button buttonLoadFromFiles;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox listBoxXmlFiles;
         private System.Windows.Forms.DataGridView dataGridViewStudRates;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnSurname;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnFName;
