@@ -100,7 +100,7 @@
             this.dataGridViewStudRates.ShowRowErrors = false;
             this.dataGridViewStudRates.Size = new System.Drawing.Size(592, 221);
             this.dataGridViewStudRates.TabIndex = 2;
-            this.dataGridViewStudRates.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewStudRates_CellContentDoubleClick);
+            this.dataGridViewStudRates.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewStudRates_CellDoubleClick);
             // 
             // ColumnSurname
             // 

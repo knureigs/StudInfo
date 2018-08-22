@@ -51,6 +51,8 @@ namespace StudInfo
 
         private void listBoxXmlFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (listBoxXmlFiles.SelectedItem == null)
+                return;
             LoadRatingFromXml(listBoxXmlFiles.SelectedItem.ToString());
         }
 
@@ -78,6 +80,8 @@ namespace StudInfo
         {
             _rating.Clear();
             dataGridViewStudRates.Rows.Clear();
+            textBoxFilter.Text = "";
+            listBoxXmlFiles.ClearSelected();
         }
 
         private void buttonGetGroup_Click(object sender, EventArgs e)
@@ -92,7 +96,7 @@ namespace StudInfo
 
         private void buttonGetFIOGroup_Click(object sender, EventArgs e)
         {
-            if (dataGridViewStudRates.SelectedRows == null)
+            if (dataGridViewStudRates.SelectedRows == null || dataGridViewStudRates.SelectedRows.Count == 0)
             {
                 return;
             }
@@ -100,7 +104,7 @@ namespace StudInfo
             ClipboardFIOGroup(dataGridViewStudRates.SelectedRows[0]);
         }
 
-        private void dataGridViewStudRates_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void dataGridViewStudRates_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (dataGridViewStudRates.SelectedRows == null)
             {
@@ -172,6 +176,8 @@ namespace StudInfo
         /// <param name="path">Путь к файлу.</param>
         private void LoadRatingFromXml(string path)
         {
+            textBoxFilter.Text = "";
+
             _rating.FillFromXml(path);
 
             FillStudRatesGrid(_rating.Students);
