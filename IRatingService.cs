@@ -14,6 +14,12 @@ namespace StudInfo
         IReadOnlyList<Student> Students { get; }
 
         /// <summary>
+        /// Заполняет коллекцию данных о студентах, считывая указанные PDF-файлы стипендиального рейтинга.
+        /// </summary>
+        /// <param name="paths">Пути к PDF-файлам с данными стипендиального рейтинга.</param>
+        void FillFromPdf(string[] paths);
+
+        /// <summary>
         /// Заполняет коллекцию объектов, описывающих студентов, на основании ранее сохраненного XML-файла.
         /// </summary>
         /// <param name="path">Путь к файлу.</param>
@@ -26,10 +32,16 @@ namespace StudInfo
         void SaveToXml(string path);
 
         /// <summary>
-        /// Заполняет коллекцию данных о студентах, считывая указанные PDF-файлы стипендиального рейтинга.
+        /// Заполняет коллекцию объектов, описывающих студентов, на основании сохранения в файле СУБД SQLite.
         /// </summary>
-        /// <param name="paths">Пути к PDF-файлам с данными стипендиального рейтинга.</param>
-        void FillFromPdf(string[] paths);
+        /// <param name="path">Путь к файлу базы данных.</param>
+        void FillFromDB(string path);
+
+        /// <summary>
+        /// Сохраняет коллекцию данных о студентах в файл базы данных.
+        /// </summary>
+        /// <param name="path">Путь к файлу базы данных.</param>
+        void SaveToDB(string path);
 
         /// <summary>
         /// Очищает коллекцию данных о студентах.

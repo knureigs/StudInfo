@@ -51,18 +51,27 @@ namespace StudInfo
 
         private void listBoxXmlFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _rating.FillFromXml(listBoxXmlFiles.SelectedItem.ToString());
-            FillStudRatesGrid(_rating.Students);
+            LoadRatingFromXml(listBoxXmlFiles.SelectedItem.ToString());
         }
 
-        private void buttonLoadFromFiles_Click(object sender, EventArgs e)
+        private void buttonLoadFromPdf_Click(object sender, EventArgs e)
         {
             LoadRatingFromPdf();
         }
 
         private void buttonSaveToXml_Click(object sender, EventArgs e)
         {
-            SaveRatingDataToXml();
+            SaveRatingToXml();
+        }
+
+        private void buttonLoadFromDB_Click(object sender, EventArgs e)
+        {
+            LoadRatingFromDB();
+        }
+
+        private void buttonSaveToDB_Click(object sender, EventArgs e)
+        {
+            SaveRatingToDB();
         }
 
         private void buttonDataGridClear_Click(object sender, EventArgs e)
@@ -143,7 +152,8 @@ namespace StudInfo
         {
             OpenFileDialog ofd = new OpenFileDialog
             {
-                Multiselect = true
+                Multiselect = true,
+                DefaultExt = "pdf"
             };
             DialogResult dialogResult = ofd.ShowDialog();
             if (dialogResult == DialogResult.Cancel || dialogResult == DialogResult.Abort || dialogResult == DialogResult.No)
@@ -157,11 +167,25 @@ namespace StudInfo
         }
 
         /// <summary>
+        /// Загружает данные рейтинга, ранее сохраненные в XML-файле.
+        /// </summary>
+        /// <param name="path">Путь к файлу.</param>
+        private void LoadRatingFromXml(string path)
+        {
+            _rating.FillFromXml(path);
+
+            FillStudRatesGrid(_rating.Students);
+        }
+
+        /// <summary>
         /// Сохраняет обработанные данные из рейтинга в XML.
         /// </summary>
-        private void SaveRatingDataToXml()
+        private void SaveRatingToXml()
         {
-            SaveFileDialog sfd = new SaveFileDialog();
+            SaveFileDialog sfd = new SaveFileDialog()
+            {
+                DefaultExt = "xml"
+            };
             DialogResult dialogResult = sfd.ShowDialog();
             if (dialogResult == DialogResult.Cancel || dialogResult == DialogResult.Abort || dialogResult == DialogResult.No)
             {
@@ -172,11 +196,44 @@ namespace StudInfo
         }
 
         /// <summary>
+        /// Загружает данные рейтинга, ранее сохраненные в базе данных.
+        /// </summary>
+        private void LoadRatingFromDB()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            DialogResult dialogResult = ofd.ShowDialog();
+            if (dialogResult == DialogResult.Cancel || dialogResult == DialogResult.Abort || dialogResult == DialogResult.No)
+            {
+                return;
+            }
+
+            _rating.FillFromDB(ofd.FileName);
+
+            FillStudRatesGrid(_rating.Students);
+        }
+
+        /// <summary>
+        /// Сохраняет обработанные данные рейтинга в базу данных.
+        /// </summary>
+        private void SaveRatingToDB()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            DialogResult dialogResult = sfd.ShowDialog();
+            if (dialogResult == DialogResult.Cancel || dialogResult == DialogResult.Abort || dialogResult == DialogResult.No)
+            {
+                return;
+            }
+
+            _rating.SaveToDB(sfd.FileName);
+        }
+
+        /// <summary>
         /// Заполняет таблицу по коллекции данных о студентах.
         /// </summary>
         /// <param name="students">Коллекция объектов, описывающих студентов.</param>
         private void FillStudRatesGrid(IReadOnlyList<Student> students)
         {
+            // очищаем, т.к. все равно метод используется с отображением заново всей коллекции.
             dataGridViewStudRates.Rows.Clear();
 
             foreach (Student stud in students)

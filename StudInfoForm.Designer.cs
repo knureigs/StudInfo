@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.buttonLoadFromFiles = new System.Windows.Forms.Button();
+            this.buttonLoadFromPdf = new System.Windows.Forms.Button();
             this.listBoxXmlFiles = new System.Windows.Forms.ListBox();
             this.dataGridViewStudRates = new System.Windows.Forms.DataGridView();
             this.ColumnSurname = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -44,25 +44,31 @@
             this.textBoxFilter = new System.Windows.Forms.TextBox();
             this.labelClipboardContent = new System.Windows.Forms.Label();
             this.textBoxClipboardContent = new System.Windows.Forms.TextBox();
+            this.buttonSaveToDB = new System.Windows.Forms.Button();
+            this.buttonLoadFromDB = new System.Windows.Forms.Button();
+            this.labelSearch = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewStudRates)).BeginInit();
             this.SuspendLayout();
             // 
-            // buttonLoadFromFiles
+            // buttonLoadFromPdf
             // 
-            this.buttonLoadFromFiles.Location = new System.Drawing.Point(23, 46);
-            this.buttonLoadFromFiles.Name = "buttonLoadFromFiles";
-            this.buttonLoadFromFiles.Size = new System.Drawing.Size(75, 23);
-            this.buttonLoadFromFiles.TabIndex = 0;
-            this.buttonLoadFromFiles.Text = "Загрузить";
-            this.buttonLoadFromFiles.UseVisualStyleBackColor = true;
-            this.buttonLoadFromFiles.Click += new System.EventHandler(this.buttonLoadFromFiles_Click);
+            this.buttonLoadFromPdf.Location = new System.Drawing.Point(12, 12);
+            this.buttonLoadFromPdf.Name = "buttonLoadFromPdf";
+            this.buttonLoadFromPdf.Size = new System.Drawing.Size(109, 23);
+            this.buttonLoadFromPdf.TabIndex = 0;
+            this.buttonLoadFromPdf.Text = "Загрузить из PDF";
+            this.buttonLoadFromPdf.UseVisualStyleBackColor = true;
+            this.buttonLoadFromPdf.Click += new System.EventHandler(this.buttonLoadFromPdf_Click);
             // 
             // listBoxXmlFiles
             // 
+            this.listBoxXmlFiles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.listBoxXmlFiles.FormattingEnabled = true;
-            this.listBoxXmlFiles.Location = new System.Drawing.Point(12, 75);
+            this.listBoxXmlFiles.HorizontalScrollbar = true;
+            this.listBoxXmlFiles.Location = new System.Drawing.Point(12, 131);
             this.listBoxXmlFiles.Name = "listBoxXmlFiles";
-            this.listBoxXmlFiles.Size = new System.Drawing.Size(55, 212);
+            this.listBoxXmlFiles.Size = new System.Drawing.Size(109, 160);
             this.listBoxXmlFiles.TabIndex = 1;
             this.listBoxXmlFiles.SelectedIndexChanged += new System.EventHandler(this.listBoxXmlFiles_SelectedIndexChanged);
             // 
@@ -71,7 +77,8 @@
             this.dataGridViewStudRates.AllowUserToAddRows = false;
             this.dataGridViewStudRates.AllowUserToDeleteRows = false;
             this.dataGridViewStudRates.AllowUserToResizeRows = false;
-            this.dataGridViewStudRates.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.dataGridViewStudRates.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewStudRates.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewStudRates.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -81,7 +88,7 @@
             this.ColumnRate,
             this.ColumnGroup,
             this.ColumnAddition});
-            this.dataGridViewStudRates.Location = new System.Drawing.Point(73, 76);
+            this.dataGridViewStudRates.Location = new System.Drawing.Point(127, 70);
             this.dataGridViewStudRates.MultiSelect = false;
             this.dataGridViewStudRates.Name = "dataGridViewStudRates";
             this.dataGridViewStudRates.ReadOnly = true;
@@ -91,7 +98,7 @@
             this.dataGridViewStudRates.ShowCellToolTips = false;
             this.dataGridViewStudRates.ShowEditingIcon = false;
             this.dataGridViewStudRates.ShowRowErrors = false;
-            this.dataGridViewStudRates.Size = new System.Drawing.Size(648, 215);
+            this.dataGridViewStudRates.Size = new System.Drawing.Size(592, 221);
             this.dataGridViewStudRates.TabIndex = 2;
             this.dataGridViewStudRates.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewStudRates_CellContentDoubleClick);
             // 
@@ -139,7 +146,7 @@
             // 
             // buttonGetFIOGroup
             // 
-            this.buttonGetFIOGroup.Location = new System.Drawing.Point(147, 17);
+            this.buttonGetFIOGroup.Location = new System.Drawing.Point(239, 12);
             this.buttonGetFIOGroup.Name = "buttonGetFIOGroup";
             this.buttonGetFIOGroup.Size = new System.Drawing.Size(146, 23);
             this.buttonGetFIOGroup.TabIndex = 3;
@@ -149,27 +156,28 @@
             // 
             // buttonSaveToXML
             // 
-            this.buttonSaveToXML.Location = new System.Drawing.Point(23, 17);
+            this.buttonSaveToXML.Location = new System.Drawing.Point(12, 99);
             this.buttonSaveToXML.Name = "buttonSaveToXML";
-            this.buttonSaveToXML.Size = new System.Drawing.Size(75, 23);
+            this.buttonSaveToXML.Size = new System.Drawing.Size(109, 23);
             this.buttonSaveToXML.TabIndex = 4;
-            this.buttonSaveToXML.Text = "SaveToXML";
+            this.buttonSaveToXML.Text = "Сохранить в XML";
             this.buttonSaveToXML.UseVisualStyleBackColor = true;
             this.buttonSaveToXML.Click += new System.EventHandler(this.buttonSaveToXml_Click);
             // 
             // buttonDataGridClear
             // 
-            this.buttonDataGridClear.Location = new System.Drawing.Point(337, 13);
+            this.buttonDataGridClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonDataGridClear.Location = new System.Drawing.Point(629, 12);
             this.buttonDataGridClear.Name = "buttonDataGridClear";
-            this.buttonDataGridClear.Size = new System.Drawing.Size(75, 23);
+            this.buttonDataGridClear.Size = new System.Drawing.Size(90, 52);
             this.buttonDataGridClear.TabIndex = 5;
-            this.buttonDataGridClear.Text = "Clear";
+            this.buttonDataGridClear.Text = "Очистить данные рейтинга";
             this.buttonDataGridClear.UseVisualStyleBackColor = true;
             this.buttonDataGridClear.Click += new System.EventHandler(this.buttonDataGridClear_Click);
             // 
             // buttonGetGroup
             // 
-            this.buttonGetGroup.Location = new System.Drawing.Point(147, 46);
+            this.buttonGetGroup.Location = new System.Drawing.Point(239, 41);
             this.buttonGetGroup.Name = "buttonGetGroup";
             this.buttonGetGroup.Size = new System.Drawing.Size(146, 23);
             this.buttonGetGroup.TabIndex = 3;
@@ -179,7 +187,7 @@
             // 
             // textBoxFilter
             // 
-            this.textBoxFilter.Location = new System.Drawing.Point(337, 46);
+            this.textBoxFilter.Location = new System.Drawing.Point(127, 44);
             this.textBoxFilter.Name = "textBoxFilter";
             this.textBoxFilter.Size = new System.Drawing.Size(100, 20);
             this.textBoxFilter.TabIndex = 6;
@@ -188,7 +196,7 @@
             // labelClipboardContent
             // 
             this.labelClipboardContent.AutoSize = true;
-            this.labelClipboardContent.Location = new System.Drawing.Point(484, 17);
+            this.labelClipboardContent.Location = new System.Drawing.Point(391, 22);
             this.labelClipboardContent.Name = "labelClipboardContent";
             this.labelClipboardContent.Size = new System.Drawing.Size(83, 13);
             this.labelClipboardContent.TabIndex = 7;
@@ -197,10 +205,39 @@
             // textBoxClipboardContent
             // 
             this.textBoxClipboardContent.Enabled = false;
-            this.textBoxClipboardContent.Location = new System.Drawing.Point(487, 34);
+            this.textBoxClipboardContent.Location = new System.Drawing.Point(391, 44);
             this.textBoxClipboardContent.Name = "textBoxClipboardContent";
             this.textBoxClipboardContent.Size = new System.Drawing.Size(141, 20);
             this.textBoxClipboardContent.TabIndex = 8;
+            // 
+            // buttonSaveToDB
+            // 
+            this.buttonSaveToDB.Location = new System.Drawing.Point(12, 70);
+            this.buttonSaveToDB.Name = "buttonSaveToDB";
+            this.buttonSaveToDB.Size = new System.Drawing.Size(109, 23);
+            this.buttonSaveToDB.TabIndex = 0;
+            this.buttonSaveToDB.Text = "Сохранить в БД";
+            this.buttonSaveToDB.UseVisualStyleBackColor = true;
+            this.buttonSaveToDB.Click += new System.EventHandler(this.buttonSaveToDB_Click);
+            // 
+            // buttonLoadFromDB
+            // 
+            this.buttonLoadFromDB.Location = new System.Drawing.Point(12, 41);
+            this.buttonLoadFromDB.Name = "buttonLoadFromDB";
+            this.buttonLoadFromDB.Size = new System.Drawing.Size(109, 23);
+            this.buttonLoadFromDB.TabIndex = 0;
+            this.buttonLoadFromDB.Text = "Загрузить из БД";
+            this.buttonLoadFromDB.UseVisualStyleBackColor = true;
+            this.buttonLoadFromDB.Click += new System.EventHandler(this.buttonLoadFromDB_Click);
+            // 
+            // labelSearch
+            // 
+            this.labelSearch.AutoSize = true;
+            this.labelSearch.Location = new System.Drawing.Point(127, 28);
+            this.labelSearch.Name = "labelSearch";
+            this.labelSearch.Size = new System.Drawing.Size(106, 13);
+            this.labelSearch.TabIndex = 7;
+            this.labelSearch.Text = "Поиск по фамилии:";
             // 
             // StudInfoForm
             // 
@@ -208,6 +245,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(733, 303);
             this.Controls.Add(this.textBoxClipboardContent);
+            this.Controls.Add(this.labelSearch);
             this.Controls.Add(this.labelClipboardContent);
             this.Controls.Add(this.textBoxFilter);
             this.Controls.Add(this.buttonDataGridClear);
@@ -216,9 +254,11 @@
             this.Controls.Add(this.buttonGetFIOGroup);
             this.Controls.Add(this.dataGridViewStudRates);
             this.Controls.Add(this.listBoxXmlFiles);
-            this.Controls.Add(this.buttonLoadFromFiles);
+            this.Controls.Add(this.buttonLoadFromDB);
+            this.Controls.Add(this.buttonSaveToDB);
+            this.Controls.Add(this.buttonLoadFromPdf);
             this.Name = "StudInfoForm";
-            this.Text = "Form1";
+            this.Text = "StudInfo";
             this.Activated += new System.EventHandler(this.StudInfoForm_Activated);
             this.Load += new System.EventHandler(this.StudRatingForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewStudRates)).EndInit();
@@ -229,7 +269,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button buttonLoadFromFiles;
+        private System.Windows.Forms.Button buttonLoadFromPdf;
         private System.Windows.Forms.ListBox listBoxXmlFiles;
         private System.Windows.Forms.DataGridView dataGridViewStudRates;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnSurname;
@@ -245,6 +285,9 @@
         private System.Windows.Forms.TextBox textBoxFilter;
         private System.Windows.Forms.Label labelClipboardContent;
         private System.Windows.Forms.TextBox textBoxClipboardContent;
+        private System.Windows.Forms.Button buttonSaveToDB;
+        private System.Windows.Forms.Button buttonLoadFromDB;
+        private System.Windows.Forms.Label labelSearch;
     }
 }
 

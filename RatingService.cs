@@ -14,10 +14,12 @@ namespace StudInfo
     /// </summary>
     class RatingService : IRatingService
     {
+        #region Implementation IRatingService.
+
         /// <summary>
         /// Список объектов, описывающих студентов по имеющимся в рейтинге данным.
         /// </summary>
-        private List<Student> students;
+        private List<Student> students = new List<Student>(0);
         public IReadOnlyList<Student> Students
         {
             get
@@ -39,7 +41,7 @@ namespace StudInfo
             XmlSerializer serializer = new XmlSerializer(typeof(List<Student>));
             FileStream fs = new FileStream(path, FileMode.Open);
             XmlReader reader = XmlReader.Create(fs);
-            students = (List<Student>)serializer.Deserialize(reader);
+            students.AddRange((List<Student>)serializer.Deserialize(reader));
             fs.Close();
         }
 
@@ -52,11 +54,23 @@ namespace StudInfo
             writer.Close();
         }
 
+        public void FillFromDB(string path)
+        {
+            students.AddRange(DBProvider.GetStudents(path));
+        }
+
+        public void SaveToDB(string path)
+        {
+            DBProvider.CreateRatingDB(path, Students);
+        }
+
         public void Clear()
         {
             students.Clear();
         }
-
+        
+        #endregion
+        
         /// <summary>
         /// Заполняет коллекцию данных о студентах на основании PDF-файла с данными стипендиального рейтинга.
         /// </summary>
@@ -89,18 +103,16 @@ namespace StudInfo
                     i++;
                     continue;
                 }
-                Student stud = new Student();
-                stud.Surname = contentFirst[i];
-                i++;
-                stud.FName = contentFirst[i];
-                i++;
-                stud.SName = contentFirst[i];
-                i++;
+                Student stud = new Student
+                {
+                    Surname = contentFirst[i++],
+                    FName = contentFirst[i++],
+                    SName = contentFirst[i++]
+                };
                 // если имен четыре
                 if (Char.IsUpper(contentFirst[i][0]) || contentFirst[i] == "-") // костыль для обработки коряво записаного Буй Ван Тунга -
                 {
-                    stud.SName += " " + contentFirst[i];
-                    i++;
+                    stud.SName += " " + contentFirst[i++];
                 }
 
                 if (contentFirst[i] == "не")
@@ -118,15 +130,12 @@ namespace StudInfo
                 }
                 else
                 {
-                    stud.Rate = contentFirst[i];
-                    i++;
+                    stud.Rate = contentFirst[i++];
                 }
-                stud.Group = contentFirst[i];
-                i++;
+                stud.Group = contentFirst[i++];
                 while (Char.IsLower(contentFirst[i][0]))
                 {
-                    stud.Addition += contentFirst[i] + " ";
-                    i++;
+                    stud.Addition += contentFirst[i++] + " ";
                     if (i == contentFirst.Count)
                     {
                         break;
